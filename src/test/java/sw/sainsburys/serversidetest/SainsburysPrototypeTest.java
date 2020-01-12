@@ -110,7 +110,7 @@ public class SainsburysPrototypeTest {
     @Test
     public void shouldFindSingleLineDescription() throws Exception {
         // Given
-        final Document html = this.loadHtmlDocument("sainsburys-strawberry.html");
+        final Document html = this.loadHtmlDocument("sainsburys-british-strawberries-400g.html");
 
         // When
         final Element result = html.selectFirst(SINGLE_LINE_DESCRIPTION_SELECTOR);
@@ -123,7 +123,7 @@ public class SainsburysPrototypeTest {
     @Test
     public void shouldFindFirstLineOfDescription() throws Exception {
         // Given
-        final Document html = this.loadHtmlDocument("sainsburys-cherry.html");
+        final Document html = this.loadHtmlDocument("sainsburys-cherry-punnet-200g.html");
 
         // When
         final Element result = html.selectFirst(FIRST_LINE_DESCRIPTION_SELECTOR);
@@ -136,7 +136,7 @@ public class SainsburysPrototypeTest {
     @Test
     public void shouldFindProductNutritionalLevelWhenAvailable() throws Exception {
         // Given
-        final Document html = this.loadHtmlDocument("sainsburys-strawberry.html");
+        final Document html = this.loadHtmlDocument("sainsburys-british-strawberries-400g.html");
 
         // When
         final Element result = html.selectFirst(NUTRITION_LEVEL_SELECTOR);
@@ -149,7 +149,7 @@ public class SainsburysPrototypeTest {
     @Test
     public void shouldNotFindProductNutritionalLevelWhenMissing() throws Exception {
         // Given
-        final Document html = this.loadHtmlDocument("sainsburys-cherry.html");
+        final Document html = this.loadHtmlDocument("sainsburys-cherry-punnet-200g.html");
 
         // When
         final Element result = html.selectFirst(NUTRITION_LEVEL_SELECTOR);

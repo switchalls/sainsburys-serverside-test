@@ -18,9 +18,9 @@ public class BerriesHtmlParser {
 
     private static final String PRODUCT_DETAILS_LINK_SELECTOR = "a";
 
-    private static final String DESCRIPTION_FIRST_LINE_SELECTOR = "div#information div:contains(Description) p:eq(0)";
+    private static final String DESCRIPTION_FIRST_LINE_SELECTOR = "div#information :contains(Description) p:eq(0)";
 
-    private static final String DESCRIPTION_SINGLE_LINE_SELECTOR = "#information div.productText";
+    private static final String DESCRIPTION_SINGLE_LINE_SELECTOR = "div#information div.productText";
 
     private static final String NUTRITION_LEVEL_SELECTOR = ".nutritionLevel1";
 

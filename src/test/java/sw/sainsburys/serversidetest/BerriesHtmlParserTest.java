@@ -38,7 +38,7 @@ import static sw.sainsburys.serversidetest.JsonProductMatcher.isJsonProduct;
 @RunWith(DataProviderRunner.class)
 public class BerriesHtmlParserTest {
 
-	private static final String EXPECTED_URL = "sainsburys-berries.html";
+	private static final String EXPECTED_URL = "http://sainsburys-test/sainsburys-berries.html";
 
 	@Rule
 	public ExpectedException exceptionRule = ExpectedException.none();
@@ -79,7 +79,7 @@ public class BerriesHtmlParserTest {
 		// Given
 		when(mockConnection.get())
 			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
-			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"));
+			.thenReturn(loadHtmlDocument("sainsburys-british-strawberries-400g.html"));
 
 		// When
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
@@ -95,7 +95,7 @@ public class BerriesHtmlParserTest {
 		// Given
 		when(mockConnection.get())
 			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
-			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"));
+			.thenReturn(loadHtmlDocument("sainsburys-british-strawberries-400g.html"));
 
 		// When
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
@@ -117,7 +117,7 @@ public class BerriesHtmlParserTest {
 		// Given
 		when(mockConnection.get())
 			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
-			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"));
+			.thenReturn(loadHtmlDocument("sainsburys-british-strawberries-400g.html"));
 
 		// When
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
@@ -137,8 +137,8 @@ public class BerriesHtmlParserTest {
 		// Given
 		when(mockConnection.get())
 			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
-			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"))
-			.thenReturn(loadHtmlDocument("sainsburys-cherry.html"));
+			.thenReturn(loadHtmlDocument("sainsburys-british-strawberries-400g.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-cherry-punnet-200g.html"));
 
 		// When
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
@@ -154,12 +154,29 @@ public class BerriesHtmlParserTest {
 	}
 
 	@Test
+	public void shouldAddProductDescriptionForBlackcurrents150g() throws Exception {
+		// Given
+		when(mockConnection.get())
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-blackcurrents-150g.html"));
+
+		// When
+		final JSONObject result = testSubject.parse(EXPECTED_URL);
+
+		// Then		
+		assertThat(result.getJSONArray("result"), hasItem(
+				isJsonProduct()
+					.withTitle("Sainsbury's Blackcurrents 150g")
+					.withDescription("Union Flag")));
+	}
+
+	@Test
 	public void shouldAddProductNutritionLevel() throws Exception {
 		// Given
 		when(mockConnection.get())
 			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
-			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"))
-			.thenReturn(loadHtmlDocument("sainsburys-cherry.html"));
+			.thenReturn(loadHtmlDocument("sainsburys-british-strawberries-400g.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-cherry-punnet-200g.html"));
 
 		// When
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
@@ -176,7 +193,7 @@ public class BerriesHtmlParserTest {
 		// Given
 		when(mockConnection.get())
 			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
-			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"));
+			.thenReturn(loadHtmlDocument("sainsburys-british-strawberries-400g.html"));
 
 		// When
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
