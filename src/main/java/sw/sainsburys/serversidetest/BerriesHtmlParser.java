@@ -2,6 +2,8 @@ package sw.sainsburys.serversidetest;
 
 import java.io.IOException;
 
+import javax.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.jsoup.nodes.Document;
@@ -15,6 +17,10 @@ public class BerriesHtmlParser {
     private static final String PRODUCT_SELECTOR = "div.product";
 
     private static final String PRODUCT_DETAILS_LINK_SELECTOR = "a";
+
+    private static final String DESCRIPTION_FIRST_LINE_SELECTOR = "div#information div:contains(Description) p:eq(0)";
+
+    private static final String DESCRIPTION_SINGLE_LINE_SELECTOR = "#information div.productText";
 
     private static final String PRICE_PER_UNIT_SELECTOR = ".pricePerUnit";
 
@@ -33,7 +39,7 @@ public class BerriesHtmlParser {
 		return result;
 	}
 
-	private JSONArray createJsonForProducts(Elements htmlProducts) {
+	private JSONArray createJsonForProducts(Elements htmlProducts) throws IOException {
 		final JSONArray jsonProducts = new JSONArray();
 
 		for (Element htmlProduct : htmlProducts) {
@@ -43,15 +49,30 @@ public class BerriesHtmlParser {
 		return jsonProducts;
 	}
 
-	private JSONObject createJsonForProduct(Element htmlProduct) {
+	private JSONObject createJsonForProduct(Element htmlProduct) throws IOException {
 		final Element productDetailsLink = htmlProduct.selectFirst(PRODUCT_DETAILS_LINK_SELECTOR);
 		final Element unitPrice = htmlProduct.selectFirst(PRICE_PER_UNIT_SELECTOR);
 		
+		final String detailsUrl = productDetailsLink.attr("href");
+		final Document detailsHtml = this.connectionProvider.createConnectionFor(detailsUrl).get();
+		final Element description = this.getProductDescription(detailsHtml);
+
 		final JSONObject newProduct = new JSONObject();
 		newProduct.put("title", productDetailsLink.text());
-		newProduct.put("unitPrice", this.getFirstNumericField(unitPrice.text()));
-		
+		newProduct.put("unitPrice", this.getFirstNumericField(unitPrice.text()));		
+		newProduct.put("description", description.text());
+
 		return newProduct;
+	}
+
+	@Nullable
+	private Element getProductDescription(Document detailsHtml) {
+		final Element description = detailsHtml.selectFirst(DESCRIPTION_FIRST_LINE_SELECTOR);
+		if (description != null) {
+			return description;
+		}
+		
+		return detailsHtml.selectFirst(DESCRIPTION_SINGLE_LINE_SELECTOR);
 	}
 
 	// TODO - Use mocked Document(s) to avoid exposing getFirstNumericField() method?

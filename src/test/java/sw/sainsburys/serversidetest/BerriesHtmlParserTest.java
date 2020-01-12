@@ -1,11 +1,14 @@
 package sw.sainsburys.serversidetest;
 
+import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -28,7 +31,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import com.tngtech.java.junit.dataprovider.DataProvider;
 import com.tngtech.java.junit.dataprovider.DataProviderRunner;
@@ -38,7 +40,7 @@ import static sw.sainsburys.serversidetest.JsonProductMatcher.isJsonProduct;
 @RunWith(DataProviderRunner.class)
 public class BerriesHtmlParserTest {
 
-	private static final String EXPECTED_URL = "http://sw-test.com/berries";
+	private static final String EXPECTED_URL = "sainsburys-berries.html";
 
 	@Rule
 	public ExpectedException exceptionRule = ExpectedException.none();
@@ -77,10 +79,9 @@ public class BerriesHtmlParserTest {
 	@Test
 	public void shouldConnectToStatedUrl() throws Exception {
 		// Given
-		final Document expectedHtml = loadHtmlDocument("sainsburys-berries.html");
-
 		when(mockConnection.get())
-			.thenReturn(expectedHtml);
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"));
 
 		// When
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
@@ -94,10 +95,9 @@ public class BerriesHtmlParserTest {
 	@Test
 	public void shouldAddProductTitle() throws Exception {
 		// Given
-		final Document expectedHtml = loadHtmlDocument("sainsburys-berries.html");
-
 		when(mockConnection.get())
-			.thenReturn(expectedHtml);
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"));
 
 		// When
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
@@ -117,10 +117,9 @@ public class BerriesHtmlParserTest {
 	@Test
 	public void shouldAddProductUnitPrice() throws Exception {
 		// Given
-		final Document expectedHtml = loadHtmlDocument("sainsburys-berries.html");
-
 		when(mockConnection.get())
-			.thenReturn(expectedHtml);
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"));
 
 		// When
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
@@ -135,7 +134,33 @@ public class BerriesHtmlParserTest {
 					.withUnitPrice(1.5)));		
 	}
 
-    @DataProvider({ "33", "£33", "33/unit", "£33/unit" })
+	@Test
+	public void shouldAddProductDescription() throws Exception {
+		// Given
+		when(mockConnection.get())
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-cherry.html"));
+
+		// When
+		final JSONObject result = testSubject.parse(EXPECTED_URL);
+
+		// Then		
+		assertThat(result.get("result"), (Matcher) hasItem(
+				isJsonProduct()
+				.withTitle("Sainsbury's Blackberries, Sweet 150g")
+				.withDescription("Cherries")));		
+
+		assertThat(result.get("result"), (Matcher) hasItems(
+				isJsonProduct()
+					.withTitle("Sainsbury's Strawberries 400g")
+					.withDescription("by Sainsbury's strawberries"),
+				isJsonProduct()
+					.withTitle("Sainsbury's Blackberries, Sweet 150g")
+					.withDescription("Cherries")));
+	}
+
+	@DataProvider({ "33", "£33", "33/unit", "£33/unit" })
     @Test
     public void shouldIgnoreTextAroundNumber(String text) {
         assertThat(testSubject.getFirstNumericField(text), equalTo(33.0));

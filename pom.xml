@@ -27,8 +27,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.guava</groupId> <!-- for @VisibleForTesting -->
-            <artifactId>guava</artifactId>
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>jsr305</artifactId> <!-- for javax.annotation.Nullable -->
+            <version>3.0.2</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>  <!-- for @VisibleForTesting -->
             <version>28.2-jre</version>
             <scope>provided</scope>
         </dependency>

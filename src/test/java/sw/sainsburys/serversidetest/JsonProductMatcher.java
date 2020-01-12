@@ -2,6 +2,8 @@ package sw.sainsburys.serversidetest;
 
 import static org.hamcrest.Matchers.equalTo;
 
+import javax.annotation.Nullable;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
@@ -13,9 +15,20 @@ public class JsonProductMatcher extends TypeSafeDiagnosingMatcher<JSONObject>{
 		return new JsonProductMatcher();
 	}
 
+	private Matcher<String> description;
+
 	private Matcher<String> title;
 	
 	private Matcher<Double> unitPrice;
+
+	public JsonProductMatcher withDescription(String description) {
+		return this.withDescription(equalTo(description));
+	}
+
+	public JsonProductMatcher withDescription(Matcher<String> description) {
+		this.description = description;
+		return this;
+	}
 
 	public JsonProductMatcher withTitle(String title) {
 		return this.withTitle(equalTo(title));
@@ -26,12 +39,12 @@ public class JsonProductMatcher extends TypeSafeDiagnosingMatcher<JSONObject>{
 		return this;
 	}
 
-	public JsonProductMatcher withUnitPrice(double price) {
-		return this.withUnitPrice(equalTo(price));
+	public JsonProductMatcher withUnitPrice(double unitPrice) {
+		return this.withUnitPrice(equalTo(unitPrice));
 	}
 
-	public JsonProductMatcher withUnitPrice(Matcher<Double> price) {
-		this.unitPrice = price;
+	public JsonProductMatcher withUnitPrice(Matcher<Double> unitPrice) {
+		this.unitPrice = unitPrice;
 		return this;
 	}
 
@@ -43,33 +56,53 @@ public class JsonProductMatcher extends TypeSafeDiagnosingMatcher<JSONObject>{
 		
 		fieldCount = this.addFieldDescription(description, fieldCount, "title", this.title);
 		fieldCount = this.addFieldDescription(description, fieldCount, "unitPrice", this.unitPrice);
-	}
-
-	private int addFieldDescription(Description description, int fieldCount, String fieldName, Matcher<?> matcher) {
-		if (fieldCount > 0) {
-			description.appendText(" and ");
-		}
-		
-		description.appendText(fieldName);
-		description.appendText(" ");
-		matcher.describeTo(description);
-		
-		return fieldCount + 1;	
+		fieldCount = this.addFieldDescription(description, fieldCount, "description", this.description);
 	}
 
 	@Override
 	protected boolean matchesSafely(JSONObject item, Description mismatchDescription) {
-		if (title != null && !title.matches(item.get("title"))) {
-			title.describeMismatch(item.get("title"), mismatchDescription);
-			return false;
-		}
-
-		if (unitPrice != null && !unitPrice.matches(item.get("unitPrice"))) {
-			unitPrice.describeMismatch(item.get("unitPrice"), mismatchDescription);
-			return false;
-		}
-
-		return true;
+		return this.matchesField("description", this.description, item, mismatchDescription)
+			&& this.matchesField("title", this.title, item, mismatchDescription)
+			&& this.matchesField("unitPrice", this.unitPrice, item, mismatchDescription);
 	}
 
+	private int addFieldDescription(
+			Description description,
+			int fieldCount,
+			String fieldName,
+			@Nullable Matcher<?> matcher) {
+
+		if (matcher != null) {
+			if (fieldCount > 0) {
+				description.appendText(" and ");
+			}
+			
+			description.appendText(fieldName);
+			description.appendText(" ");
+			matcher.describeTo(description);
+			
+			return fieldCount + 1;
+		}
+		
+		return fieldCount;
+	}
+
+	private boolean matchesField(
+			String fieldName,
+			@Nullable Matcher<?> matcher,
+			JSONObject item,
+			Description mismatchDescription) {
+
+		if (matcher != null) {
+			final Object value = item.get(fieldName);
+			if (!matcher.matches(value)) {
+				mismatchDescription.appendText(fieldName);
+				mismatchDescription.appendText(" ");
+				matcher.describeMismatch(value, mismatchDescription);
+				return false;
+			}
+		}
+		
+		return true;
+	}
 }
