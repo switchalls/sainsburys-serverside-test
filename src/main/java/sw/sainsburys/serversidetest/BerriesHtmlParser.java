@@ -35,8 +35,11 @@ public class BerriesHtmlParser {
 	public JSONObject parse(String url) throws IOException {
 		final Document berriesHtml = this.connectionProvider.createConnectionFor(url).get();
 		
+		final JSONArray products = this.createJsonForProducts(berriesHtml.select(PRODUCT_SELECTOR));
+
 		final JSONObject result = new JSONObject();
-		result.put("result", this.createJsonForProducts(berriesHtml.select(PRODUCT_SELECTOR)));
+		result.put("result", products);
+		result.put("total", this.createJsonForTotals(products));
 		
 		return result;
 	}
@@ -70,6 +73,20 @@ public class BerriesHtmlParser {
 		}
 
 		return newProduct;
+	}
+
+	private JSONObject createJsonForTotals(JSONArray products) {
+		double gross = 0d;
+		for (int i=0;  i < products.length();  i++) {
+			gross += products.getJSONObject(i).getDouble("unitPrice");
+			
+		}
+
+		final JSONObject totals = new JSONObject();
+		totals.put("gross", gross);
+		totals.put("vat", (gross * 0.2));
+		
+		return totals;
 	}
 
 	@Nullable

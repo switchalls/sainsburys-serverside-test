@@ -171,6 +171,22 @@ public class BerriesHtmlParserTest {
 					.withNutritionLevel(33)));
 	}
 
+	@Test
+	public void shouldAddTotals() throws Exception {
+		// Given
+		when(mockConnection.get())
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"));
+
+		// When
+		final JSONObject result = testSubject.parse(EXPECTED_URL);
+
+		// Then
+		final JSONObject totals = result.getJSONObject("total");
+		assertThat(totals.getDouble("gross"), equalTo(39.5));
+		assertThat(totals.getDouble("vat"), equalTo(7.9));
+	}
+
 	@DataProvider({ "33", "£33", "33/unit", "£33/unit" })
     @Test
     public void shouldIgnoreTextAroundNumber(String text) {
