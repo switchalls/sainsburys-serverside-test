@@ -1,6 +1,8 @@
 package sw.sainsburys.serversidetest;
 
 import java.io.IOException;
+import java.util.Map;
+import java.util.function.ToDoubleFunction;
 
 import javax.annotation.Nullable;
 
@@ -30,6 +32,9 @@ public class BerriesHtmlParser {
 
     private static final String PRICE_PER_UNIT_SELECTOR = ".pricePerUnit";
 
+	private static ToDoubleFunction<? super Object> JSONOBJECT_UNITPRICE = (p) ->
+		((Map<String, Double>)p).get("unitPrice");
+
 	private JsoupConnectionProvider connectionProvider;
 	
 	public BerriesHtmlParser(JsoupConnectionProvider connectionProvider) {
@@ -39,42 +44,47 @@ public class BerriesHtmlParser {
 	public JSONObject parse(String url) throws IOException {
 		final Document berriesHtml = this.connectionProvider.createConnectionFor(url).get();
 		
-		final JSONArray products = this.createJsonForProducts(this.getBaseUrl(url), berriesHtml.select(PRODUCT_SELECTOR));
+		final String baseUrl = this.getBaseUrl(url);
 
-		final JSONObject result = new JSONObject();
-		result.put("result", products);
-		result.put("total", this.createJsonForTotals(products));
+		final JSONArray jsonProducts = new JSONArray();
+		berriesHtml.select(PRODUCT_SELECTOR).forEach(
+				(p) -> jsonProducts.put(this.createJsonForProduct(baseUrl, p))
+		);
+		
+		final JSONObject result = new JSONObject()
+				.put("result", jsonProducts)
+				.put("total", this.createJsonForTotals(jsonProducts));
 		
 		return result;
 	}
 
-	private JSONArray createJsonForProducts(String baseUrl, Elements htmlProducts) throws IOException {
-		final JSONArray jsonProducts = new JSONArray();
-
-		for (Element htmlProduct : htmlProducts) {
-			jsonProducts.put(this.createJsonForProduct(baseUrl, htmlProduct));
-		}
-		
-		return jsonProducts;
-	}
-
-	private JSONObject createJsonForProduct(String baseUrl, Element htmlProduct) throws IOException {
+	private JSONObject createJsonForProduct(String baseUrl, Element htmlProduct) throws IllegalStateException {
 		final Element productDetailsLink = htmlProduct.selectFirst(PRODUCT_DETAILS_LINK_SELECTOR);
-		final Element unitPrice = htmlProduct.selectFirst(PRICE_PER_UNIT_SELECTOR);
+		final Element unitPrice = htmlProduct.selectFirst(PRICE_PER_UNIT_SELECTOR);	
 		
-		final String detailsUrl = productDetailsLink.attr("href");
-		
-		final Document detailsHtml = this.connectionProvider
-				.createConnectionFor(baseUrl + "/" + detailsUrl)
+		String detailsUrl = productDetailsLink.attr("href");
+		if (detailsUrl.startsWith("..")) {
+			detailsUrl = baseUrl + "/" + detailsUrl;
+		}
+
+		final Document detailsHtml;
+		try {
+			detailsHtml = this.connectionProvider
+				.createConnectionFor(detailsUrl)
 				.get();
-		
+
+		} catch (IOException e) {
+			// propagate as RunetimeException to allow use of method in lambda
+			throw new IllegalStateException("Cannot load product details page: " + detailsUrl, e);
+		}
+
 		final Element description = this.getProductDescription(detailsHtml);
 		final Element nutritionLevel = this.getNutritionLevel(detailsHtml);
 
-		final JSONObject newProduct = new JSONObject();
-		newProduct.put("title", productDetailsLink.text());
-		newProduct.put("unitPrice", this.getFirstNumericField(unitPrice.text()));		
-		newProduct.put("description", description.text());
+		final JSONObject newProduct = new JSONObject()
+				.put("title", productDetailsLink.text())
+				.put("unitPrice", this.getFirstNumericField(unitPrice.text()))
+				.put("description", description.text());
 		
 		if (nutritionLevel != null) {
 			newProduct.put("kcal_per_100g", this.getFirstNumericField(nutritionLevel.text()));		
@@ -87,17 +97,15 @@ public class BerriesHtmlParser {
 		final int lastSlash = url.lastIndexOf('/');
 		return url.substring(0, lastSlash - 1);
 	}
-	
+		
 	private JSONObject createJsonForTotals(JSONArray products) {
-		double gross = 0d;
-		for (int i=0;  i < products.length();  i++) {
-			gross += products.getJSONObject(i).getDouble("unitPrice");
-			
-		}
+		final double gross = products.toList().stream()
+				.mapToDouble(JSONOBJECT_UNITPRICE)
+				.sum();
 
-		final JSONObject totals = new JSONObject();
-		totals.put("gross", gross);
-		totals.put("vat", (gross * 0.2));
+		final JSONObject totals = new JSONObject()
+				.put("gross", gross)
+				.put("vat", (gross * 0.2));
 		
 		return totals;
 	}
@@ -125,8 +133,6 @@ public class BerriesHtmlParser {
 		
 		return detailsHtml.selectFirst(DESCRIPTION_SINGLE_LINE_SELECTOR);
 	}
-
-	// TODO - Use mocked Document(s) to avoid exposing getFirstNumericField() method?
 
 	@VisibleForTesting
     double getFirstNumericField(String text) {

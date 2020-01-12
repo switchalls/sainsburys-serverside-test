@@ -5,8 +5,10 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -133,6 +135,51 @@ public class BerriesHtmlParserTest {
 	}
 
 	@Test
+	public void shouldThrowExceptionWhenCannotLoadProductDetails() throws Exception {
+		// Expects
+		exceptionRule.expect(IllegalStateException.class);
+		exceptionRule.expectMessage("Cannot load product details page: https://jsainsburyplc.github.io");
+
+		// Given
+		when(mockConnection.get())
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenThrow(new IOException("Bang!"));
+
+		// When
+		testSubject.parse(EXPECTED_URL);
+	}
+
+	@Test
+	public void shouldLoadProductDetailsUsingAbsoluteHref() throws Exception {
+		// Given
+		when(mockConnection.get())
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-cherry-punnet-200g.html"));
+
+		// When
+		testSubject.parse(EXPECTED_URL);
+
+		// Then		
+		verify(mockJsoupConnectionProvider).createConnectionFor(eq(
+				"https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/shop/gb/groceries/berries-cherries-currants/sainsburys-british-strawberries-400g.html"));
+	}
+
+	@Test
+	public void shouldLoadProductDetailsUsingRelativeHref() throws Exception {
+		// Given
+		when(mockConnection.get())
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-cherry-punnet-200g.html"));
+
+		// When
+		testSubject.parse(EXPECTED_URL);
+
+		// Then		
+		verify(mockJsoupConnectionProvider).createConnectionFor(eq(
+				"http://sainsburys-tes/../../../../../../shop/gb/groceries/berries-cherries-currants/sainsburys-blueberries-200g.html"));
+	}
+
+	@Test
 	public void shouldAddProductDescription() throws Exception {
 		// Given
 		when(mockConnection.get())
@@ -151,6 +198,9 @@ public class BerriesHtmlParserTest {
 				isJsonProduct()
 					.withTitle("Sainsbury's Blackberries, Sweet 150g")
 					.withDescription("Cherries")));
+		
+		verify(mockJsoupConnectionProvider).createConnectionFor(eq(
+				"https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/shop/gb/groceries/berries-cherries-currants/sainsburys-british-strawberries-400g.html"));
 	}
 
 	@Test
@@ -254,6 +304,8 @@ public class BerriesHtmlParserTest {
 		assertThat(totals.getDouble("gross"), equalTo(39.5));
 		assertThat(totals.getDouble("vat"), equalTo(7.9));
 	}
+
+	// TODO - Use mocked Document(s) to avoid exposing getFirstNumericField() method?
 
 	@DataProvider({ "33", "£33", "33/unit", "£33/unit" })
     @Test
