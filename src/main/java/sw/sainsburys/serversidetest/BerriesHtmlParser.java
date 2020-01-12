@@ -136,6 +136,8 @@ public class BerriesHtmlParser {
 
 	@VisibleForTesting
     double getFirstNumericField(String text) {
+		// TODO - Replace with streams based solution or 3rd party function?
+		
         final StringBuffer sb = new StringBuffer();
 
         int i = 0;

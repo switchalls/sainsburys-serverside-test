@@ -42,11 +42,11 @@ Duration: 2 hours (whilst watching TV with kids)
 
 * Fixed issues (missing descriptions and nutrition values)
 
+* Refactored parser to use forEach() and streams()
+
 * Updated readme
 
 Duration: 5h
-
-*TODO* - Refactor code to use Collection.forEach()
 
 ## Testing notes
 
@@ -59,4 +59,7 @@ The following products do not have kcal values:
 
 Above list verified by manually viewing product details in browser
 
-*TODO* - Fix missing "Blackcurrents 150g" description
+*TODO* - Why is Jsoup converting absolute href links (`https://jsainsburyplc.github.io`)
+to relative ones (`../shop`) when running via main but not junits ?
+
+*TODO* - Should "Blackcurrents 150g" description be "Union Flag" ?

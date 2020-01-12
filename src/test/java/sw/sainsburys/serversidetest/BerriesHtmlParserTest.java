@@ -217,7 +217,8 @@ public class BerriesHtmlParserTest {
 		assertThat(result.getJSONArray("result"), hasItem(
 				isJsonProduct()
 					.withTitle("Sainsbury's Blackcurrants 150g")
-					.withDescription(""))); // TODO - Should be "Union Flag"
+					// TODO - Visual inspection of page implies description should be "Union Flag" ; Is that correct? 
+					.withDescription("")));
 	}
 
 	@Test
