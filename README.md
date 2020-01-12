@@ -46,7 +46,17 @@ Duration: 2 hours (whilst watching TV with kids)
 
 Duration: 5h
 
-TODO - Fix missing "Blackcurrents 150g" description
+*TODO* - Refactor code to use Collection.forEach()
 
-TODO - Refactor code to use Collection.forEach()
+## Testing notes
 
+The following products do not have kcal values:
+
+* Sainsbury's Mixed Berries 300g
+* Sainsbury's Mixed Berry Twin Pack 200g
+* Sainsbury's Blackcurrants 150g
+* Sainsbury's British Cherry & Strawberry Pack 600g
+
+Above list verified by manually viewing product details in browser
+
+*TODO* - Fix missing "Blackcurrents 150g" description
