@@ -15,6 +15,8 @@ public class JsonProductMatcher extends TypeSafeDiagnosingMatcher<JSONObject>{
 
 	private Matcher<String> title;
 	
+	private Matcher<Double> unitPrice;
+
 	public JsonProductMatcher withTitle(String title) {
 		return this.withTitle(equalTo(title));
 	}
@@ -24,20 +26,46 @@ public class JsonProductMatcher extends TypeSafeDiagnosingMatcher<JSONObject>{
 		return this;
 	}
 
+	public JsonProductMatcher withUnitPrice(double price) {
+		return this.withUnitPrice(equalTo(price));
+	}
+
+	public JsonProductMatcher withUnitPrice(Matcher<Double> price) {
+		this.unitPrice = price;
+		return this;
+	}
+
 	@Override
 	public void describeTo(Description description) {
-		description.appendText("JsonProduct with: ");
+		int fieldCount = 0;
 
-		if (title != null) {
-			description.appendText("title");
-			description.appendValue(this.title);
+		description.appendText("JsonProduct with: ");
+		
+		fieldCount = this.addFieldDescription(description, fieldCount, "title", this.title);
+		fieldCount = this.addFieldDescription(description, fieldCount, "unitPrice", this.unitPrice);
+	}
+
+	private int addFieldDescription(Description description, int fieldCount, String fieldName, Matcher<?> matcher) {
+		if (fieldCount > 0) {
+			description.appendText(" and ");
 		}
+		
+		description.appendText(fieldName);
+		description.appendText(" ");
+		matcher.describeTo(description);
+		
+		return fieldCount + 1;	
 	}
 
 	@Override
 	protected boolean matchesSafely(JSONObject item, Description mismatchDescription) {
 		if (title != null && !title.matches(item.get("title"))) {
 			title.describeMismatch(item.get("title"), mismatchDescription);
+			return false;
+		}
+
+		if (unitPrice != null && !unitPrice.matches(item.get("unitPrice"))) {
+			unitPrice.describeMismatch(item.get("unitPrice"), mismatchDescription);
 			return false;
 		}
 

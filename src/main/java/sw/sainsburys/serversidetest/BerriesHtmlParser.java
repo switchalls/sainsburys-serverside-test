@@ -8,9 +8,15 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import com.google.common.annotations.VisibleForTesting;
+
 public class BerriesHtmlParser {
 
-    private static final String PRODUCT_SELECTOR = "div.productNameAndPromotions";
+    private static final String PRODUCT_SELECTOR = "div.product";
+
+    private static final String PRODUCT_DETAILS_LINK_SELECTOR = "a";
+
+    private static final String PRICE_PER_UNIT_SELECTOR = ".pricePerUnit";
 
 	private JsoupConnectionProvider connectionProvider;
 	
@@ -38,9 +44,36 @@ public class BerriesHtmlParser {
 	}
 
 	private JSONObject createJsonForProduct(Element htmlProduct) {
+		final Element productDetailsLink = htmlProduct.selectFirst(PRODUCT_DETAILS_LINK_SELECTOR);
+		final Element unitPrice = htmlProduct.selectFirst(PRICE_PER_UNIT_SELECTOR);
+		
 		final JSONObject newProduct = new JSONObject();
-		newProduct.put("title", htmlProduct.selectFirst("a").text());
+		newProduct.put("title", productDetailsLink.text());
+		newProduct.put("unitPrice", this.getFirstNumericField(unitPrice.text()));
 		
 		return newProduct;
 	}
+
+	// TODO - Use mocked Document(s) to avoid exposing getFirstNumericField() method?
+
+	@VisibleForTesting
+    double getFirstNumericField(String text) {
+        final StringBuffer sb = new StringBuffer();
+
+        int i = 0;
+        while (i < text.length() && !isCharForNumber(text.charAt(i))) {
+            i++;
+        }
+
+        while (i < text.length() && isCharForNumber(text.charAt(i))) {
+            sb.append(text.charAt(i++));
+        }
+
+        return Double.parseDouble(sb.toString());
+    }
+
+    private boolean isCharForNumber(char c) {
+        return Character.isDigit(c) || c == '.';
+    }
+
 }

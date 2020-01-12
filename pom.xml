@@ -27,6 +27,13 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.guava</groupId> <!-- for @VisibleForTesting -->
+            <artifactId>guava</artifactId>
+            <version>28.2-jre</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
