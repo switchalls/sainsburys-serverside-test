@@ -1,0 +1,97 @@
+{
+  "result": [
+    {
+      "unitPrice": 1.75,
+      "kcal_per_100g": 33,
+      "description": "by Sainsbury's strawberries",
+      "title": "Sainsbury's Strawberries 400g"
+    },
+    {
+      "unitPrice": 1.75,
+      "description": "by Sainsbury's blueberries",
+      "title": "Sainsbury's Blueberries 200g"
+    },
+    {
+      "unitPrice": 1.75,
+      "description": "by Sainsbury's raspberries",
+      "title": "Sainsbury's Raspberries 225g"
+    },
+    {
+      "unitPrice": 1.5,
+      "kcal_per_100g": 32,
+      "description": "by Sainsbury's blackberries",
+      "title": "Sainsbury's Blackberries, Sweet 150g"
+    },
+    {
+      "unitPrice": 3.25,
+      "kcal_per_100g": 45,
+      "description": "by Sainsbury's blueberries",
+      "title": "Sainsbury's Blueberries 400g"
+    },
+    {
+      "unitPrice": 2,
+      "description": "So Organic blueberries Plump and Refreshing",
+      "title": "Sainsbury's Blueberries, SO Organic 150g"
+    },
+    {
+      "unitPrice": 2.5,
+      "description": "Ttd raspberries",
+      "title": "Sainsbury's Raspberries, Taste the Difference 150g"
+    },
+    {
+      "unitPrice": 2.5,
+      "description": "by Sainsbury's Family Cherry Punnet",
+      "title": "Sainsbury's Cherries 400g"
+    },
+    {
+      "unitPrice": 1.5,
+      "description": "by Sainsbury's blackberries",
+      "title": "Sainsbury's Blackberries, Tangy 150g"
+    },
+    {
+      "unitPrice": 2.5,
+      "kcal_per_100g": 27,
+      "description": "Ttd strawberries",
+      "title": "Sainsbury's Strawberries, Taste the Difference 300g"
+    },
+    {
+      "unitPrice": 1.5,
+      "description": "Cherries",
+      "title": "Sainsbury's Cherry Punnet 200g"
+    },
+    {
+      "unitPrice": 3.5,
+      "description": "by Sainsbury's mixed berries",
+      "title": "Sainsbury's Mixed Berries 300g"
+    },
+    {
+      "unitPrice": 2.75,
+      "description": "Mixed Berries",
+      "title": "Sainsbury's Mixed Berry Twin Pack 200g"
+    },
+    {
+      "unitPrice": 2.5,
+      "description": "by Sainsbury's redcurrants",
+      "title": "Sainsbury's Redcurrants 150g"
+    },
+    {
+      "unitPrice": 2.5,
+      "description": "Cherry Punnet",
+      "title": "Sainsbury's Cherry Punnet, Taste the Difference 200g"
+    },
+    {
+      "unitPrice": 1.75,
+      "description": "",
+      "title": "Sainsbury's Blackcurrants 150g"
+    },
+    {
+      "unitPrice": 4,
+      "description": "British Cherry & Strawberry Mixed Pack",
+      "title": "Sainsbury's British Cherry & Strawberry Pack 600g"
+    }
+  ],
+  "total": {
+    "gross": 39.5,
+    "vat": 7.9
+  }
+}

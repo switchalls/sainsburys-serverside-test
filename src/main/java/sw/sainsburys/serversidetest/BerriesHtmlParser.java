@@ -35,7 +35,7 @@ public class BerriesHtmlParser {
 	public JSONObject parse(String url) throws IOException {
 		final Document berriesHtml = this.connectionProvider.createConnectionFor(url).get();
 		
-		final JSONArray products = this.createJsonForProducts(berriesHtml.select(PRODUCT_SELECTOR));
+		final JSONArray products = this.createJsonForProducts(this.getBaseUrl(url), berriesHtml.select(PRODUCT_SELECTOR));
 
 		final JSONObject result = new JSONObject();
 		result.put("result", products);
@@ -44,22 +44,26 @@ public class BerriesHtmlParser {
 		return result;
 	}
 
-	private JSONArray createJsonForProducts(Elements htmlProducts) throws IOException {
+	private JSONArray createJsonForProducts(String baseUrl, Elements htmlProducts) throws IOException {
 		final JSONArray jsonProducts = new JSONArray();
 
 		for (Element htmlProduct : htmlProducts) {
-			jsonProducts.put(this.createJsonForProduct(htmlProduct));
+			jsonProducts.put(this.createJsonForProduct(baseUrl, htmlProduct));
 		}
 		
 		return jsonProducts;
 	}
 
-	private JSONObject createJsonForProduct(Element htmlProduct) throws IOException {
+	private JSONObject createJsonForProduct(String baseUrl, Element htmlProduct) throws IOException {
 		final Element productDetailsLink = htmlProduct.selectFirst(PRODUCT_DETAILS_LINK_SELECTOR);
 		final Element unitPrice = htmlProduct.selectFirst(PRICE_PER_UNIT_SELECTOR);
 		
 		final String detailsUrl = productDetailsLink.attr("href");
-		final Document detailsHtml = this.connectionProvider.createConnectionFor(detailsUrl).get();
+		
+		final Document detailsHtml = this.connectionProvider
+				.createConnectionFor(baseUrl + "/" + detailsUrl)
+				.get();
+		
 		final Element description = this.getProductDescription(detailsHtml);
 		final Element nutritionLevel = detailsHtml.selectFirst(NUTRITION_LEVEL_SELECTOR);
 
@@ -75,6 +79,11 @@ public class BerriesHtmlParser {
 		return newProduct;
 	}
 
+	private String getBaseUrl(String url) {
+		final int lastSlash = url.lastIndexOf('/');
+		return url.substring(0, lastSlash - 1);
+	}
+	
 	private JSONObject createJsonForTotals(JSONArray products) {
 		double gross = 0d;
 		for (int i=0;  i < products.length();  i++) {
