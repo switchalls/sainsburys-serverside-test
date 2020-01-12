@@ -1,6 +1,5 @@
 package sw.sainsburys.serversidetest;
 
-import static org.hamcrest.Matchers.endsWith;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
@@ -8,7 +7,6 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.argThat;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
@@ -125,7 +123,7 @@ public class BerriesHtmlParserTest {
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
 
 		// Then		
-		assertThat(result.get("result"), (Matcher) hasItems(
+		assertThat(result.getJSONArray("result"), (Matcher) hasItems(
 				isJsonProduct()
 					.withTitle("Sainsbury's Strawberries 400g")
 					.withUnitPrice(1.75),
@@ -146,18 +144,31 @@ public class BerriesHtmlParserTest {
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
 
 		// Then		
-		assertThat(result.get("result"), (Matcher) hasItem(
-				isJsonProduct()
-				.withTitle("Sainsbury's Blackberries, Sweet 150g")
-				.withDescription("Cherries")));		
-
-		assertThat(result.get("result"), (Matcher) hasItems(
+		assertThat(result.getJSONArray("result"), (Matcher) hasItems(
 				isJsonProduct()
 					.withTitle("Sainsbury's Strawberries 400g")
 					.withDescription("by Sainsbury's strawberries"),
 				isJsonProduct()
 					.withTitle("Sainsbury's Blackberries, Sweet 150g")
 					.withDescription("Cherries")));
+	}
+
+	@Test
+	public void shouldAddProductNutritionLevel() throws Exception {
+		// Given
+		when(mockConnection.get())
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-strawberry.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-cherry.html"));
+
+		// When
+		final JSONObject result = testSubject.parse(EXPECTED_URL);
+
+		// Then
+		assertThat(result.getJSONArray("result"), hasItem(
+				isJsonProduct()
+					.withTitle("Sainsbury's Strawberries 400g")
+					.withNutritionLevel(33)));
 	}
 
 	@DataProvider({ "33", "£33", "33/unit", "£33/unit" })

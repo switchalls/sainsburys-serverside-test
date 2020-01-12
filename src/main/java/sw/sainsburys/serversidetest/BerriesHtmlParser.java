@@ -22,6 +22,8 @@ public class BerriesHtmlParser {
 
     private static final String DESCRIPTION_SINGLE_LINE_SELECTOR = "#information div.productText";
 
+    private static final String NUTRITION_LEVEL_SELECTOR = ".nutritionLevel1";
+
     private static final String PRICE_PER_UNIT_SELECTOR = ".pricePerUnit";
 
 	private JsoupConnectionProvider connectionProvider;
@@ -56,11 +58,16 @@ public class BerriesHtmlParser {
 		final String detailsUrl = productDetailsLink.attr("href");
 		final Document detailsHtml = this.connectionProvider.createConnectionFor(detailsUrl).get();
 		final Element description = this.getProductDescription(detailsHtml);
+		final Element nutritionLevel = detailsHtml.selectFirst(NUTRITION_LEVEL_SELECTOR);
 
 		final JSONObject newProduct = new JSONObject();
 		newProduct.put("title", productDetailsLink.text());
 		newProduct.put("unitPrice", this.getFirstNumericField(unitPrice.text()));		
 		newProduct.put("description", description.text());
+		
+		if (nutritionLevel != null) {
+			newProduct.put("kcal_per_100g", this.getFirstNumericField(nutritionLevel.text()));		
+		}
 
 		return newProduct;
 	}

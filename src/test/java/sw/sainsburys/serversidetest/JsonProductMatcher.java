@@ -17,6 +17,8 @@ public class JsonProductMatcher extends TypeSafeDiagnosingMatcher<JSONObject>{
 
 	private Matcher<String> description;
 
+	private Matcher<Double> nutritionLevel;
+
 	private Matcher<String> title;
 	
 	private Matcher<Double> unitPrice;
@@ -27,6 +29,15 @@ public class JsonProductMatcher extends TypeSafeDiagnosingMatcher<JSONObject>{
 
 	public JsonProductMatcher withDescription(Matcher<String> description) {
 		this.description = description;
+		return this;
+	}
+
+	public JsonProductMatcher withNutritionLevel(double nutritionLevel) {
+		return this.withNutritionLevel(equalTo(nutritionLevel));
+	}
+
+	public JsonProductMatcher withNutritionLevel(Matcher<Double> nutritionLevel) {
+		this.nutritionLevel = nutritionLevel;
 		return this;
 	}
 
@@ -57,13 +68,15 @@ public class JsonProductMatcher extends TypeSafeDiagnosingMatcher<JSONObject>{
 		fieldCount = this.addFieldDescription(description, fieldCount, "title", this.title);
 		fieldCount = this.addFieldDescription(description, fieldCount, "unitPrice", this.unitPrice);
 		fieldCount = this.addFieldDescription(description, fieldCount, "description", this.description);
+		fieldCount = this.addFieldDescription(description, fieldCount, "nutritionLevel", this.nutritionLevel);
 	}
 
 	@Override
 	protected boolean matchesSafely(JSONObject item, Description mismatchDescription) {
 		return this.matchesField("description", this.description, item, mismatchDescription)
 			&& this.matchesField("title", this.title, item, mismatchDescription)
-			&& this.matchesField("unitPrice", this.unitPrice, item, mismatchDescription);
+			&& this.matchesField("unitPrice", this.unitPrice, item, mismatchDescription)
+			&& this.matchesField("kcal_per_100g", this.nutritionLevel, item, mismatchDescription);
 	}
 
 	private int addFieldDescription(
