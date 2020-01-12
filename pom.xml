@@ -85,7 +85,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>uk.co.cdl.servicehub.utility.logparser.Main</mainClass>
+                            <mainClass>sw.sainsburys.serversidetest.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

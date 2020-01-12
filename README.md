@@ -2,6 +2,16 @@
 
 See [sainsbury's overview](https://jsainsburyplc.github.io/serverside-test/)
 
+To compile:
+```bash
+$ mvn clean install
+```
+
+To execute:
+```bash
+$ java -jar target/sainsburys-serverside-test-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+```
+
 # Strategy
 
 ## Select technology
@@ -10,7 +20,7 @@ See [sainsbury's overview](https://jsainsburyplc.github.io/serverside-test/)
 
 * Googled `java html parser` ; found [baeldung article](https://www.baeldung.com/java-with-jsoup)
 
-*Question* - Does `jsoup` fit integrate with junits
+*Question* - Does `jsoup` fit integrate with junits?
 
 Duration: 15mins
 
@@ -24,6 +34,19 @@ Duration: 2 hours (whilst watching TV with kids)
 
 ## Develop solution
 
-* Create pom
+* Create project (setup `pom.xml` ; added `SainsburysPrototypeTest`)
 
-Duration: 10am
+* Create parser using downloaded HTML (see `SainsburysPrototypeTest`)
+
+* Execute against https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html
+
+* Fixed issues (missing descriptions and nutrition values)
+
+* Updated readme
+
+Duration: 5h
+
+TODO - Fix missing "Blackcurrents 150g" description
+
+TODO - Refactor code to use Collection.forEach()
+
