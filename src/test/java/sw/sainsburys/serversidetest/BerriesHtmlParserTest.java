@@ -189,6 +189,57 @@ public class BerriesHtmlParserTest {
 	}
 
 	@Test
+	public void shouldAddProductNutritionLevelForBlueberries200g() throws Exception {
+		// Given
+		when(mockConnection.get())
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-blueberries-200g.html"));
+
+		// When
+		final JSONObject result = testSubject.parse(EXPECTED_URL);
+
+		// Then
+		assertThat(result.getJSONArray("result"), hasItem(
+				isJsonProduct()
+					.withTitle("Sainsbury's Blueberries 200g")
+					.withNutritionLevel(45.0)));
+	}
+
+	@Test
+	public void shouldAddProductNutritionLevelForBlackberriesSweet150g() throws Exception {
+		// Given
+		when(mockConnection.get())
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-blackberries-sweet-150g.html"));
+
+		// When
+		final JSONObject result = testSubject.parse(EXPECTED_URL);
+
+		// Then
+		assertThat(result.getJSONArray("result"), hasItem(
+				isJsonProduct()
+					.withTitle("Sainsbury's Blackberries, Sweet 150g")
+					.withNutritionLevel(32.0)));
+	}
+
+	@Test
+	public void shouldAddProductNutritionLevelForCherriesPunnet200g() throws Exception {
+		// Given
+		when(mockConnection.get())
+			.thenReturn(loadHtmlDocument("sainsburys-berries.html"))
+			.thenReturn(loadHtmlDocument("sainsburys-cherry-punnet-200g.html"));
+
+		// When
+		final JSONObject result = testSubject.parse(EXPECTED_URL);
+
+		// Then
+		assertThat(result.getJSONArray("result"), hasItem(
+				isJsonProduct()
+					.withTitle("Sainsbury's Cherry Punnet 200g")
+					.withNutritionLevel(52.0)));
+	}
+
+	@Test
 	public void shouldAddTotals() throws Exception {
 		// Given
 		when(mockConnection.get())

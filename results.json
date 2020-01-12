@@ -8,11 +8,13 @@
     },
     {
       "unitPrice": 1.75,
+      "kcal_per_100g": 45,
       "description": "by Sainsbury's blueberries",
       "title": "Sainsbury's Blueberries 200g"
     },
     {
       "unitPrice": 1.75,
+      "kcal_per_100g": 32,
       "description": "by Sainsbury's raspberries",
       "title": "Sainsbury's Raspberries 225g"
     },
@@ -30,21 +32,25 @@
     },
     {
       "unitPrice": 2,
-      "description": "So Organic blueberries Plump and Refreshing",
+      "kcal_per_100g": 45,
+      "description": "So Organic blueberries",
       "title": "Sainsbury's Blueberries, SO Organic 150g"
     },
     {
       "unitPrice": 2.5,
+      "kcal_per_100g": 32,
       "description": "Ttd raspberries",
       "title": "Sainsbury's Raspberries, Taste the Difference 150g"
     },
     {
       "unitPrice": 2.5,
+      "kcal_per_100g": 52,
       "description": "by Sainsbury's Family Cherry Punnet",
       "title": "Sainsbury's Cherries 400g"
     },
     {
       "unitPrice": 1.5,
+      "kcal_per_100g": 32,
       "description": "by Sainsbury's blackberries",
       "title": "Sainsbury's Blackberries, Tangy 150g"
     },
@@ -56,6 +62,7 @@
     },
     {
       "unitPrice": 1.5,
+      "kcal_per_100g": 52,
       "description": "Cherries",
       "title": "Sainsbury's Cherry Punnet 200g"
     },
@@ -71,11 +78,13 @@
     },
     {
       "unitPrice": 2.5,
+      "kcal_per_100g": 71,
       "description": "by Sainsbury's redcurrants",
       "title": "Sainsbury's Redcurrants 150g"
     },
     {
       "unitPrice": 2.5,
+      "kcal_per_100g": 48,
       "description": "Cherry Punnet",
       "title": "Sainsbury's Cherry Punnet, Taste the Difference 200g"
     },

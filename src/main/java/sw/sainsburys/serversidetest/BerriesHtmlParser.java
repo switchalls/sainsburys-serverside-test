@@ -24,6 +24,10 @@ public class BerriesHtmlParser {
 
     private static final String NUTRITION_LEVEL_SELECTOR = ".nutritionLevel1";
 
+    private static final String NUTRITION_TABLE_SELECTOR = "table.nutritionTable tbody tr:eq(1) td:eq(0)";
+
+    private static final String ENERGY_KCAL_ROW_SELECTOR = "table.nutritionTable tbody th:contains(Energy kcal) + td";
+
     private static final String PRICE_PER_UNIT_SELECTOR = ".pricePerUnit";
 
 	private JsoupConnectionProvider connectionProvider;
@@ -65,7 +69,7 @@ public class BerriesHtmlParser {
 				.get();
 		
 		final Element description = this.getProductDescription(detailsHtml);
-		final Element nutritionLevel = detailsHtml.selectFirst(NUTRITION_LEVEL_SELECTOR);
+		final Element nutritionLevel = this.getNutritionLevel(detailsHtml);
 
 		final JSONObject newProduct = new JSONObject();
 		newProduct.put("title", productDetailsLink.text());
@@ -99,6 +103,20 @@ public class BerriesHtmlParser {
 	}
 
 	@Nullable
+	private Element getNutritionLevel(Document detailsHtml) {
+		final Element nutritionLevel = detailsHtml.selectFirst(NUTRITION_LEVEL_SELECTOR);
+		if (nutritionLevel != null) {
+			return nutritionLevel;
+		}
+		
+		final Element energyKcal = detailsHtml.selectFirst(ENERGY_KCAL_ROW_SELECTOR);
+		if (energyKcal != null) {
+			return energyKcal;
+		}
+
+		return detailsHtml.selectFirst(NUTRITION_TABLE_SELECTOR);
+	}
+
 	private Element getProductDescription(Document detailsHtml) {
 		final Element description = detailsHtml.selectFirst(DESCRIPTION_FIRST_LINE_SELECTOR);
 		if (description != null) {
