@@ -1,6 +1,6 @@
 package sw.sainsburys.serversidetest;
 
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import org.hamcrest.Matcher;
 import org.json.JSONObject;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -25,6 +26,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import static sw.sainsburys.serversidetest.JsonProductMatcher.isJsonProduct;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BerriesHtmlParserTest {
@@ -75,12 +78,29 @@ public class BerriesHtmlParserTest {
 		final JSONObject result = testSubject.parse(EXPECTED_URL);
 
 		// Then
-		assertThat(result.get("title"), equalTo("Sainsbury's Strawberries 400g"));
+		assertThat(result.get("result"), not(nullValue()));
 		
 		verify(mockJsoupConnectionProvider).createConnectionFor(eq(EXPECTED_URL));
 	}
 
-    private Document loadHtmlDocument(String path) throws Exception {
+	@Test
+	public void shouldAddProductTitles() throws Exception {
+		// Given
+		final Document expectedHtml = loadHtmlDocument("sainsburys-berries.html");
+
+		when(mockConnection.get())
+			.thenReturn(expectedHtml);
+
+		// When
+		final JSONObject result = testSubject.parse(EXPECTED_URL);
+
+		// Then
+		assertThat(result.get("result"), (Matcher) hasItems(
+				isJsonProduct().withTitle("Sainsbury's Strawberries 400g"),
+				isJsonProduct().withTitle("Sainsbury's Blackcurrants 150g")));		
+	}
+
+	private Document loadHtmlDocument(String path) throws Exception {
         final URL htmlUrl = this.getClass().getResource(path);
         assertThat("Cannot find file on classpath: " + path, htmlUrl, not(nullValue(URL.class)));
 
