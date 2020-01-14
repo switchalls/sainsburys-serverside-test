@@ -6,6 +6,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import sw.sainsburys.serversidetest.jsonbuilder.BerriesCherriesCurrantsJsonBuilder;
+
 @SpringBootApplication
 public class SpringBootConsoleApplication implements CommandLineRunner {
 	
@@ -15,11 +17,11 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
 
 	private static final String SAISNBURIES_BERRIES_CHERRIES_CURRANTS_URL = "https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html";
 
-	private final BerriesHtmlParser htmlParser;
+	private final BerriesCherriesCurrantsJsonBuilder jsonBuilder;
 	
 	@Autowired
-	public SpringBootConsoleApplication(BerriesHtmlParser htmlParser) {
-		this.htmlParser = htmlParser;
+	public SpringBootConsoleApplication(BerriesCherriesCurrantsJsonBuilder jsonBuilder) {
+		this.jsonBuilder = jsonBuilder;
 	}
 
 	@Override
@@ -29,7 +31,10 @@ public class SpringBootConsoleApplication implements CommandLineRunner {
 			targetUrl = args[0];
 		}
 
-		final JSONObject result = htmlParser.parse(targetUrl);
+		final JSONObject result = jsonBuilder
+				.withHtmlPage(targetUrl)
+				.build();
+
 		System.out.println(result);		
 	}
 

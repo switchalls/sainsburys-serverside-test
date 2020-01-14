@@ -83,5 +83,3 @@ Above list verified by manually viewing product details in browser
 
 *TODO* - Why is Jsoup converting absolute href links (`https://jsainsburyplc.github.io`)
 to relative ones (`../shop`) when running via main but not junits ?
-
-*TODO* - Should "Blackcurrents 150g" description be "Union Flag" ?

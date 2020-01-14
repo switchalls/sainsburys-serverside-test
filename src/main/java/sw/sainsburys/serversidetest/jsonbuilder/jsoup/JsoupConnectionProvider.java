@@ -1,4 +1,4 @@
-package sw.sainsburys.serversidetest;
+package sw.sainsburys.serversidetest.jsonbuilder.jsoup;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;

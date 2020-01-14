@@ -1,4 +1,4 @@
-package sw.sainsburys.serversidetest;
+package sw.sainsburys.serversidetest.matchers;
 
 import static org.hamcrest.Matchers.equalTo;
 
