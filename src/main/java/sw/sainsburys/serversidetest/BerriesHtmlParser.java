@@ -11,10 +11,17 @@ import org.json.JSONObject;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.google.common.annotations.VisibleForTesting;
 
+@Component
 public class BerriesHtmlParser {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(BerriesHtmlParser.class);
 
     private static final String PRODUCT_SELECTOR = "div.product";
 
@@ -37,11 +44,14 @@ public class BerriesHtmlParser {
 
 	private JsoupConnectionProvider connectionProvider;
 	
+	@Autowired
 	public BerriesHtmlParser(JsoupConnectionProvider connectionProvider) {
 		this.connectionProvider = connectionProvider;
 	}
 
 	public JSONObject parse(String url) throws IOException {
+		LOGGER.info("Parsing main page " + url);
+
 		final Document berriesHtml = this.connectionProvider.createConnectionFor(url).get();
 		
 		final String baseUrl = this.getBaseUrl(url);
@@ -66,6 +76,8 @@ public class BerriesHtmlParser {
 		if (detailsUrl.startsWith("..")) {
 			detailsUrl = baseUrl + "/" + detailsUrl;
 		}
+
+		LOGGER.info("Parsing linked page " + detailsUrl);
 
 		final Document detailsHtml;
 		try {

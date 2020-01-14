@@ -32,21 +32,43 @@ Duration: 15mins
 
 Duration: 2 hours (whilst watching TV with kids)
 
-## Develop solution
+## Develop solution (phase 1)
 
-* Create project (setup `pom.xml` ; added `SainsburysPrototypeTest`)
+Objectives:
+  * Coding approach, eg. TDD
+  * Coding style, eg. readability
+  * Testing (including regression)
+  * Demonstrate code `progression` in git history
 
-* Create parser using downloaded HTML (see `SainsburysPrototypeTest`)
+Simple architecture:
+  * `Build what you need, not what you fear you may need` ... Uncle Bob
+  * Basic console application
+  * Minimal dependencies
 
-* Execute against https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html
+1) Create project (setup `pom.xml` ; added `SainsburysPrototypeTest`)
 
-* Fixed issues (missing descriptions and nutrition values)
+2) Develop parser against downloaded HTML (see `SainsburysPrototypeTest`)
 
-* Refactored parser to use forEach() and streams()
+3) Execute against https://jsainsburyplc.github.io/serverside-test/site/www.sainsburys.co.uk/webapp/wcs/stores/servlet/gb/groceries/berries-cherries-currants6039.html
 
-* Updated readme
+4) Fixed issues (missing descriptions and nutrition values)
+
+5) Refactored parser to use forEach() and streams()
 
 Duration: 5h
+
+## Develop solution (phase 2)
+
+Address review comments:
+
+> We would have liked to have seen more evidence of
+> separation of concerns and Inversion of control
+
+Objectives for rework:
+  * Simple objects, eg. single purpose / self contained
+  * Inversion of control, eg. injection of dependencies created outside objects
+
+1) Added spring boot 2
 
 ## Testing notes
 
