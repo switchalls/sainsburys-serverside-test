@@ -87,5 +87,9 @@ The following products do not have kcal values:
 
 Above list verified by manually viewing product details in browser
 
+*Assumption* - Product descriptions should only contain "div.longTextItems" only and 
+ignore "div.memo" elements
+
 *TODO* - Why is Jsoup converting absolute href links (`https://jsainsburyplc.github.io`)
 to relative ones (`../shop`) when running via main but not junits ?
+

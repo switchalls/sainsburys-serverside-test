@@ -1,9 +1,0 @@
-"Sainsbury's Blueberries, SO Organic 150g" description should be "So Organic blueberries Plump and Refreshing"
-
-"Sainsbury's Cherry Punnet 200g" description should be "Cherries Succulent and sweet 1 of 5 a-day 10 cherries Class I"
-
-"Sainsbury's Mixed Berry Twin Pack 200g" description should be "Mixed Berries 1 of 5 a-day 80g serving Class I Raspberries grown in Morocco Blueberries grown in Peru"
-
-"Sainsbury's Blackcurrants 150g" description should be "Union Flag"
-
-"Sainsbury's British Cherry & Strawberry Pack 600g" description should be "British Cherry & Strawberry Mixed Pack 1 of 5 a-day - 80g serving Class I Union Flag"

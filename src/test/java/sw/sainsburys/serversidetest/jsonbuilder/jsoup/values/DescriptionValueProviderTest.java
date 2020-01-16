@@ -78,7 +78,37 @@ public class DescriptionValueProviderTest {
 
 		// Then		
 		assertThat(result.isPresent(), equalTo(true));
-		assertThat(result.get(), equalTo("Description Union Flag")); // TODO - Should be "Union Flag"
+		assertThat(result.get(), equalTo("Union Flag"));
+
+	}
+
+	@Test
+	public void shouldLoadDescriptionForCherryPunnet200g() throws Exception {
+		// Given
+		when(mockProductDetailsProvider.loadProductDetails(any(Element.class), anyString()))
+			.thenReturn(aProductDetailsFor("cherry-punnet-200g"));
+
+		// When
+		final Optional<String> result = testSubject.getValue(mockDocument, TEST_URL);
+
+		// Then		
+		assertThat(result.isPresent(), equalTo(true));
+		assertThat(result.get(), equalTo("Succulent and sweet 1 of 5 a-day 10 cherries"));
+
+	}
+
+	@Test
+	public void shouldLoadDescriptionForMixedBerryTwinPack200g() throws Exception {
+		// Given
+		when(mockProductDetailsProvider.loadProductDetails(any(Element.class), anyString()))
+			.thenReturn(aProductDetailsFor("mixed-berry-twin-pack-200g"));
+
+		// When
+		final Optional<String> result = testSubject.getValue(mockDocument, TEST_URL);
+
+		// Then		
+		assertThat(result.isPresent(), equalTo(true));
+		assertThat(result.get(), equalTo("1 of 5 a-day 80g serving"));
 
 	}
 

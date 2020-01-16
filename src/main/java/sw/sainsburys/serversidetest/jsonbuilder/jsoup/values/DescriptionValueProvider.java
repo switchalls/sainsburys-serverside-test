@@ -15,6 +15,8 @@ public class DescriptionValueProvider implements JsoupNamedValueProvider<String>
 
     private static final String DESCRIPTION_LONG_TEXT_ITEMS_SELECTOR = "div#information :contains(Description) div.longTextItems";
 
+    private static final String DESCRIPTION_ITEM_TYPE_GROUP_SELECTOR = "div#information :contains(Description) div.itemTypeGroup";
+
     private static final String DESCRIPTION_SINGLE_LINE_SELECTOR = "div#information div.productText";
 
     private final ProductDetailsProvider detailsProvider;
@@ -41,6 +43,11 @@ public class DescriptionValueProvider implements JsoupNamedValueProvider<String>
 			return longTextItems;
 		}
 		
+		final Element itemTypeGroup = detailsHtml.selectFirst(DESCRIPTION_ITEM_TYPE_GROUP_SELECTOR);
+		if (itemTypeGroup != null) {
+			return itemTypeGroup;
+		}
+
 		return detailsHtml.selectFirst(DESCRIPTION_SINGLE_LINE_SELECTOR);
 	}
 
