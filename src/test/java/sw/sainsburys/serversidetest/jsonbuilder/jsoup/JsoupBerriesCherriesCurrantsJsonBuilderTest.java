@@ -100,11 +100,7 @@ public class JsoupBerriesCherriesCurrantsJsonBuilderTest {
 		// Given
 		when(mockConnection.get())
 			.thenReturn(aProductsPage())
-			// 2x strawberry product details lookups
 			.thenReturn(aProductDetailsFor("british-strawberries-400g"))
-			.thenReturn(aProductDetailsFor("british-strawberries-400g"))
-			// 2x blackberry product details lookups
-			.thenReturn(aProductDetailsFor("blackberries-sweet-150g"))
 			.thenReturn(aProductDetailsFor("blackberries-sweet-150g"));
 
 		// When

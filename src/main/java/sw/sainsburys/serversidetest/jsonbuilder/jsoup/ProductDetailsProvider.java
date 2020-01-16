@@ -1,6 +1,8 @@
 package sw.sainsburys.serversidetest.jsonbuilder.jsoup;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -16,8 +18,10 @@ public class ProductDetailsProvider {
 
     private static final String PRODUCT_DETAILS_LINK_SELECTOR = "a";
 
+    private Map<String, Document> documentCache = new HashMap<>();
+    
     private final JsoupConnectionProvider connectionProvider;
-        
+
     @Autowired
     public ProductDetailsProvider(JsoupConnectionProvider connectionProvider) {    	
     	this.connectionProvider = connectionProvider;
@@ -30,12 +34,23 @@ public class ProductDetailsProvider {
 				this.getBaseUrl(sourceUrl),
 				productDetailsLink.attr("href"));
 
+		if (this.documentCache.containsKey(detailsUrl)) {
+			return this.documentCache.get(detailsUrl);
+		}
+
 		LOGGER.info("Parsing linked page " + detailsUrl);
 
 		try {
-			return this.connectionProvider
+			final Document htmlPage = this.connectionProvider
 				.createConnectionFor(detailsUrl)
 				.get();
+			
+			// only need to optimise lookups for same product
+			this.documentCache.clear();
+			
+			this.documentCache.put(detailsUrl, htmlPage);
+			
+			return htmlPage;
 
 		} catch (IOException e) {
 			// propagate as RuntimeException to allow use of method in lambda

@@ -70,6 +70,12 @@ Objectives for rework:
 
 1) Added spring boot 2
 
+2) Split up original html parser into small self-contained objects
+
+3) Use dependency injection to build system 
+
+Duration: 2h
+
 ## Testing notes
 
 The following products do not have kcal values:

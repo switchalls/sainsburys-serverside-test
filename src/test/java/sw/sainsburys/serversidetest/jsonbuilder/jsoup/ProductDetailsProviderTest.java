@@ -106,4 +106,40 @@ public class ProductDetailsProviderTest {
 		testSubject.loadProductDetails(aStrawberriesProduct(), TEST_URL);
 	}
 
+	@Test
+	public void shouldCacheLastUrl() throws Exception {
+		// Given
+		final Document expectedDocument = aProductDetailsFor("british-strawberries-400g");
+		
+		when(mockConnection.get())
+			.thenReturn(expectedDocument);
+
+		testSubject.loadProductDetails(aBlueberriesProduct(), TEST_URL);
+
+		// When
+		final Document result = testSubject.loadProductDetails(aBlueberriesProduct(), TEST_URL);
+
+		// When
+		assertThat(result, sameInstance(expectedDocument));
+	}
+
+	@Test
+	public void shouldNotCacheDifferentUrl() throws Exception {
+		// Given
+		final Document firstDocument = aProductDetailsFor("british-strawberries-400g");
+		final Document secondDocument = aProductDetailsFor("blueberries-200g");
+		
+		when(mockConnection.get())
+			.thenReturn(firstDocument)
+			.thenReturn(secondDocument);
+
+		testSubject.loadProductDetails(aStrawberriesProduct(), TEST_URL);
+
+		// When
+		final Document result = testSubject.loadProductDetails(aBlueberriesProduct(), TEST_URL);
+
+		// When
+		assertThat(result, sameInstance(secondDocument));
+	}
+
 }
