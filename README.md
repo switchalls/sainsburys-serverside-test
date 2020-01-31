@@ -9,7 +9,7 @@ $ mvn clean install
 
 To execute:
 ```bash
-$ java -jar target/sainsburys-serverside-test-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+$ java -jar target/sw-springboot-console-3.0.0-SNAPSHOT.jar
 ```
 
 # Strategy
@@ -55,8 +55,6 @@ Simple architecture:
 
 5) Refactored parser to use forEach() and streams()
 
-Duration: 5h
-
 ## Develop solution (phase 2)
 
 Address review comments:
@@ -73,8 +71,6 @@ Objectives for rework:
 2) Split up original html parser into small self-contained objects
 
 3) Use dependency injection to build system 
-
-Duration: 2h
 
 ## Testing notes
 
