@@ -5,7 +5,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>sw.learning</groupId>
-    <artifactId>sw-springboot-console</artifactId>
+    <artifactId>sw-jsoup-sainsburys</artifactId>
     <version>3.0.0-SNAPSHOT</version>
 
     <properties>

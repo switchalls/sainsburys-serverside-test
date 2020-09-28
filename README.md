@@ -1,6 +1,4 @@
-# Sainsbury's serverside-test by Stewart Witchalls
-
-See [sainsbury's overview](https://jsainsburyplc.github.io/serverside-test/)
+# Jsoup Hackerthon
 
 To compile:
 ```bash
@@ -9,10 +7,12 @@ $ mvn clean install
 
 To execute:
 ```bash
-$ java -jar target/sw-springboot-console-3.0.0-SNAPSHOT.jar
+$ java -jar target/sw-jsoup-sainsburys-3.0.0-SNAPSHOT.jar
 ```
 
 # Strategy
+
+See [sainsbury's overview](https://jsainsburyplc.github.io/serverside-test/)
 
 ## Select technology
 
