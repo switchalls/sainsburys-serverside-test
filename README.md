@@ -2,12 +2,20 @@
 
 To compile:
 ```bash
-$ mvn clean install
+# for maven builds
+mvn clean install
+
+# for gradle builds
+gradlew clean build
 ```
 
 To execute:
 ```bash
-$ java -jar target/sw-jsoup-sainsburys-3.0.0-SNAPSHOT.jar
+# for maven builds
+java -jar target/sw-jsoup-sainsburys-3.0.0-SNAPSHOT.jar
+
+# for gradle builds
+java -jar build/libs/sw-jsoup-sainsburys-3.0.0-SNAPSHOT.jar
 ```
 
 # Strategy

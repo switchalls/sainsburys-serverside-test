@@ -1,0 +1,38 @@
+// see https://spring.io/guides/gs/gradle/
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.2.2.RELEASE")  // spring boot gradle plugin will used for generate jar
+    }
+}
+
+plugins {
+    id "org.springframework.boot" version "2.2.2.RELEASE"
+}
+
+apply plugin: "java"
+apply plugin: "io.spring.dependency-management"
+
+sourceCompatibility = 1.8
+
+group "sw.learning"
+version "3.0.0-SNAPSHOT"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-starter"
+
+    compile "com.google.code.findbugs:jsr305:3.0.2" // for @Nullable
+    compile "com.google.guava:guava:28.2-jre" // for @VisibleForTesting
+    compile "org.jsoup:jsoup:1.12.1"
+    compile "org.json:json:20190722"
+
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "com.tngtech.java:junit-dataprovider:1.10.0"
+}
